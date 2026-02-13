@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-public class AppUsers {
+public class AppUsers{
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
    private Long userid;
