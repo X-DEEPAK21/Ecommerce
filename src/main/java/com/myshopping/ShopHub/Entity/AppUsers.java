@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 public class AppUsers{
    @Id
-   @GeneratedValue(strategy = GenerationType.UUID)
+   @GeneratedValue(strategy = GenerationType.SEQUENCE)
    private Long userid;
    @Email
    @Column(unique = true,nullable = false)

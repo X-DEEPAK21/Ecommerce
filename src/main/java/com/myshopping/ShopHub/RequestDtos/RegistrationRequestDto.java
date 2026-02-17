@@ -1,8 +1,10 @@
 package com.myshopping.ShopHub.RequestDtos;
 
 import com.myshopping.ShopHub.Entity.Role;
+import jakarta.validation.constraints.Email;
 
 public class RegistrationRequestDto {
+
 
      String email;
      String password;

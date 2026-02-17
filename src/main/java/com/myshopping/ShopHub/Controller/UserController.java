@@ -10,26 +10,21 @@ import com.myshopping.ShopHub.ResponseDto.RegistrationResponseDto;
 import com.myshopping.ShopHub.Security.Token;
 import com.myshopping.ShopHub.Security.UserDetailImpl;
 import com.myshopping.ShopHub.Service.UserService;
-import com.myshopping.ShopHub.mapper.LoginResponseMapper;
-import com.myshopping.ShopHub.mapper.RegistrationRequestMapper;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequestMapping("/app/user")
 public class UserController {
     @Autowired
-    LoginResponseMapper loginResponseMapper;
-
-    @Autowired
-    RegistrationRequestMapper registrationRequestMapper;
+    ModelMapper modelMapper;
     @Autowired
     UserService userService;
     @Autowired
@@ -40,13 +35,14 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponseDto> saveUser(@Valid @RequestBody RegistrationRequestDto registrationRequestDto){
 
-        AppUsers appUser=registrationRequestMapper.toEntity(registrationRequestDto);
+        AppUsers appUser=modelMapper.map(registrationRequestDto,AppUsers.class);
         appUser.setRole(Role.ROLE_USER);
        RegistrationResponseDto responseDto= userService.saveUser(appUser);
        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 
     }
 
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto){
 
         UsernamePasswordAuthenticationToken token =
@@ -55,11 +51,15 @@ public class UserController {
       AppUsers users=((UserDetailImpl)authentication.getPrincipal()).getAppUsers();
       String jwt_access_Token=token_class.generateAccessToken(users);
 
-      LoginResponseDto loginResponseDto= loginResponseMapper.toDTO(users);
+      LoginResponseDto loginResponseDto= modelMapper.map(users, LoginResponseDto.class);
       loginResponseDto.setToken(jwt_access_Token);
 
       return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
 
+    }
+    @GetMapping("/getUser")
+    public AppUsers getUserByEmail(@RequestParam String email){
+      return userService.findUserByEmail(email);
     }
 
 }

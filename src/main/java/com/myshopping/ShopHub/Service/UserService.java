@@ -6,8 +6,10 @@ import com.myshopping.ShopHub.Exception.UserNotFoundException;
 import com.myshopping.ShopHub.Repository.AppUserRepo;
 import com.myshopping.ShopHub.ResponseDto.RegistrationResponseDto;
 import com.myshopping.ShopHub.ResponseDto.RegistrationResponseDto;
-import com.myshopping.ShopHub.mapper.RegistrationRequestMapper;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,20 +19,22 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
     @Autowired
-    private RegistrationRequestMapper registrationRequestMapper;
+    ModelMapper modelMapper;
     @Autowired
      PasswordEncoder passwordEncoder;
     @Autowired
     private AppUserRepo appUserRepo;
+    private final String CACHE_NAME="app_user";
 
     @Transactional
     public RegistrationResponseDto saveUser(AppUsers appUser){
         String password=passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(password);
        AppUsers appUser1= appUserRepo.save(appUser);
-      return registrationRequestMapper.toDTO(appUser1);
+      RegistrationResponseDto dto= modelMapper.map(appUser1, RegistrationResponseDto.class);
+      dto.setContact_number(appUser1.getPhone_number());
+      return dto;
     }
 
     public void checkUserExist(String  email){
@@ -42,6 +46,7 @@ public class UserService {
        return user.get();
     }
 
+    @Cacheable(cacheNames = CACHE_NAME,key = "#email")
     public AppUsers findUserByEmail(String email){
      Optional<AppUsers> user =appUserRepo.findByEmail(email);
      if(user.isEmpty())throw new UserNotFoundException("User not found ");
