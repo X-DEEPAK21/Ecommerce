@@ -5,8 +5,10 @@ import com.myshopping.ShopHub.Entity.AppUsers;
 import com.myshopping.ShopHub.Entity.Role;
 import com.myshopping.ShopHub.RequestDtos.LoginRequestDto;
 import com.myshopping.ShopHub.RequestDtos.RegistrationRequestDto;
+import com.myshopping.ShopHub.RequestDtos.UpdateRequestDto;
 import com.myshopping.ShopHub.ResponseDto.LoginResponseDto;
 import com.myshopping.ShopHub.ResponseDto.RegistrationResponseDto;
+import com.myshopping.ShopHub.ResponseDto.UpdateUserDto;
 import com.myshopping.ShopHub.Security.Token;
 import com.myshopping.ShopHub.Security.UserDetailImpl;
 import com.myshopping.ShopHub.Service.UserService;
@@ -57,9 +59,19 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
 
     }
+    //test
     @GetMapping("/getUser")
     public AppUsers getUserByEmail(@RequestParam String email){
       return userService.findUserByEmail(email);
     }
+
+    @PatchMapping("/update/{emailId}")
+    public ResponseEntity<UpdateUserDto> updateUser(@PathVariable("emailId")String email, @RequestBody UpdateRequestDto updateRequestDto){
+      UpdateUserDto updateUserDto= userService.updateUser(email,updateRequestDto);
+      return ResponseEntity.status(HttpStatus.OK).body(updateUserDto);
+    }
+
+
+
 
 }

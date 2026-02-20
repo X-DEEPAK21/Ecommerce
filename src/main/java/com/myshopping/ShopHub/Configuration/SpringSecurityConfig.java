@@ -36,8 +36,8 @@ public class SpringSecurityConfig {
                          .accessDeniedHandler(jwtAccesshandler);
               })
               .authorizeHttpRequests((Request)->{
-                  Request.requestMatchers("/app/user/register","/app/user/login","/app/user/getUser").permitAll();
-                  Request.requestMatchers("/login/user/**").hasRole("USER");
+                  Request.requestMatchers("/app/user/register","/app/user/login").permitAll();
+                  Request.requestMatchers("/user/**").hasRole("USER");
                   Request.anyRequest().authenticated();
               })
               .addFilterBefore(jwtVerify, UsernamePasswordAuthenticationFilter.class);

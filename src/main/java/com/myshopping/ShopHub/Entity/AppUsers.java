@@ -31,6 +31,8 @@ public class AppUsers{
    private Role role;
    @Column(nullable = false)
    private Boolean is_active=true;
+   private String created_by;
+   private String updated_by;
    private LocalDateTime created_at;
    private LocalDateTime updated_at;
 
@@ -54,6 +56,22 @@ public class AppUsers{
     public void onUpdate(){
 
         this.updated_at=LocalDateTime.now();
+    }
+
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
+    }
+
+    public String getUpdated_by() {
+        return updated_by;
+    }
+
+    public void setUpdated_by(String updated_by) {
+        this.updated_by = updated_by;
     }
 
     public Long getUserid() {
