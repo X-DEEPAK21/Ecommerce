@@ -60,10 +60,6 @@ public class UserController {
 
     }
     //test
-    @GetMapping("/getUser")
-    public AppUsers getUserByEmail(@RequestParam String email){
-      return userService.findUserByEmail(email);
-    }
 
     @PatchMapping("/update/{emailId}")
     public ResponseEntity<UpdateUserDto> updateUser(@PathVariable("emailId")String email, @RequestBody UpdateRequestDto updateRequestDto){

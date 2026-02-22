@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class AppUsers{
    @Id
@@ -36,8 +40,7 @@ public class AppUsers{
    private LocalDateTime created_at;
    private LocalDateTime updated_at;
 
-    public AppUsers() {
-    }
+
 
     public AppUsers(String email, String password, String full_name, String phone_number, Role role, Boolean is_active) {
         this.email = email;
